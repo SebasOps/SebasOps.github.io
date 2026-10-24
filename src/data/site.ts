@@ -6,7 +6,7 @@
 
 export const site = {
   name: 'Sebastián Aguilar',
-  email: 'aguilarsebastian093@gmail.com', // reemplazar por el correo público
+  email: 'aguilarsebastian093@gmail.com', // correo público
   linkedin: 'https://www.linkedin.com/in/sebasti%C3%A1n-aguilarb/',
   github: 'https://github.com/SebasOps',
   // CV de ciencia de datos, uno por idioma; los PDF viven en public/cv/
