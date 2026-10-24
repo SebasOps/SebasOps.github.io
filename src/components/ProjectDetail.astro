@@ -34,8 +34,11 @@ const features = localize(lang, project.features);
   </a>
 
   <header class="detail__header">
-    <h1 class="detail__title">{localize(lang, project.name)}</h1>
-    {project.inDevelopment && <span class="detail__badge">{t('projects.inDev')}</span>}
+    {/* Título y etiqueta de estado en una fila; el resumen va siempre debajo, en su propia línea */}
+    <div class="detail__headline">
+      <h1 class="detail__title">{localize(lang, project.name)}</h1>
+      {project.inDevelopment && <span class="detail__badge">{t('projects.inDev')}</span>}
+    </div>
     <p class="detail__summary">{localize(lang, project.summary)}</p>
   </header>
 
@@ -133,9 +136,15 @@ const features = localize(lang, project.features);
     font-weight: 600;
   }
 
+  /* Cabecera en columna: fila de título + etiqueta, y debajo el resumen */
   .detail__header {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .detail__headline {
+    display: flex;
+    flex-wrap: wrap; /* en pantallas angostas la etiqueta baja bajo el título */
     align-items: center;
     gap: 12px 16px;
   }
@@ -157,7 +166,6 @@ const features = localize(lang, project.features);
   }
   /* flex-basis 100%: el resumen baja a su propia línea bajo el título */
   .detail__summary {
-    flex-basis: 100%;
     margin: 0;
     max-width: 64ch;
     font-size: clamp(1.0625rem, 1.6vw, 1.25rem);

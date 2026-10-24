@@ -84,7 +84,7 @@ export const ui = {
     'project.gallery.next': 'Captura siguiente',
     'project.gallery.image': 'Captura',
     'project.gallery.of': 'de',
-    'project.gallery.testData': 'Todas las capturas usan datos de prueba.',
+    'project.gallery.testData': 'Todas las capturas contienen datos de prueba.',
     'project.video.fallback': 'Tu navegador no reproduce este video.',
     'project.video.download': 'Descargar el video',
   },

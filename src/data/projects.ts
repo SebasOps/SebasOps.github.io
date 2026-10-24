@@ -242,7 +242,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'service-hub',
-    name: { es: 'service-hub', en: 'service-hub' },
+    name: { es: 'Sitio de reservas en línea', en: 'Online booking site' },
     summary: {
       es: 'Plataforma de reservas en línea para negocios que manejan citas: agenda, Google Calendar, cupones, fidelización, reportes y gastos.',
       en: 'Online booking platform for appointment-based businesses: scheduling, Google Calendar, coupons, loyalty, reports and expenses.',
