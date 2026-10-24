@@ -1,0 +1,67 @@
+---
+// src/components/Navigation.astro
+/**
+ * Navegación principal y selector de idioma (ES | EN).
+ * Props:
+ *  - lang: idioma de la página actual.
+ * Marca con aria-current el enlace de la página y el idioma activos.
+ */
+ 
+import { languages } from '../i18n/ui';
+import {
+  useTranslations,
+  localizedPath,
+  switchLangPath,
+  type Lang,
+} from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const currentPath = Astro.url.pathname.replace(/\/?$/, '/');
+
+const links = [
+  { key: 'nav.home', slug: '' },
+  { key: 'nav.projects', slug: 'projects' },
+  { key: 'nav.about', slug: 'about' },
+] as const;
+---
+
+<header>
+  <nav aria-label={t('nav.label')}>
+    <ul>
+      {
+        links.map(({ key, slug }) => {
+          const href = localizedPath(lang, slug);
+          return (
+            <li>
+              <a href={href} aria-current={currentPath === href ? 'page' : undefined}>
+                {t(key)}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+
+  <ul aria-label={t('lang.label')}>
+    {
+      Object.keys(languages).map((code) => (
+        <li>
+          <a
+            href={switchLangPath(currentPath, code as Lang)}
+            lang={code}
+            hreflang={code}
+            aria-current={code === lang ? 'true' : undefined}
+          >
+            {code.toUpperCase()}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</header>

@@ -7,7 +7,9 @@
  *  - title: título de la pestaña (y base del SEO).
  *  - description: meta descripción (opcional).
  */
+
 import type { Lang } from '../i18n/utils';
+import Navigation from '../components/Navigation.astro';
 
 interface Props {
   lang: Lang;
@@ -27,6 +29,7 @@ const { lang, title, description } = Astro.props;
     {description && <meta name="description" content={description} />}
   </head>
   <body>
+    <Navigation lang={lang} />
     <slot />
   </body>
 </html>

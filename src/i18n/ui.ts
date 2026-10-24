@@ -4,6 +4,7 @@
  * Regla: es y en deben tener exactamente las mismas claves.
  * Las claves usan el formato "seccion.elemento" (ej. "nav.home").
  */
+
 export const languages = {
   es: 'Español',
   en: 'English',
@@ -18,6 +19,8 @@ export const ui = {
     'nav.projects': 'Proyectos',
     'nav.about': 'Sobre mí',
     'home.title': 'Inicio',
+    'nav.label': 'Navegación principal',
+    'lang.label': 'Idioma',
   },
   en: {
     'meta.siteName': 'Sebastián Aguilar',
@@ -25,5 +28,7 @@ export const ui = {
     'nav.projects': 'Projects',
     'nav.about': 'About me',
     'home.title': 'Home',
+    'nav.label': 'Main navigation',
+    'lang.label': 'Language',
   },
 } as const;
