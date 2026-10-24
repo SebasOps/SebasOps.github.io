@@ -30,6 +30,8 @@ const { lang, title, description } = Astro.props;
   </head>
   <body>
     <Navigation lang={lang} />
-    <slot />
+    <main>
+      <slot />
+    </main>
   </body>
 </html>
