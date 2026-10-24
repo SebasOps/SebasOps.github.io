@@ -6,7 +6,7 @@
  *  - lang: idioma de la página actual.
  * Marca con aria-current el enlace de la página y el idioma activos.
  */
-
+ 
 import { languages } from '../i18n/ui';
 import {
   useTranslations,
@@ -34,8 +34,8 @@ const links = [
 ] as const;
 ---
 
-<header>
-  <nav aria-label={t('nav.label')}>
+<header class="site-header">
+  <nav class="site-nav" aria-label={t('nav.label')}>
     <ul>
       {
         links.map(({ key, slug }) => {
@@ -54,7 +54,7 @@ const links = [
   </nav>
 
   {/* Selector de idioma: enlaces a la misma página en el otro idioma */}
-  <ul aria-label={t('lang.label')}>
+  <ul class="lang-switch" aria-label={t('lang.label')}>
     {
       Object.keys(languages).map((code) => (
         <li>
@@ -72,3 +72,80 @@ const links = [
     }
   </ul>
 </header>
+
+<style>
+  /* Tres columnas: vacía | navegación (centrada de verdad) | idioma a la derecha */
+  .site-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .site-nav {
+    grid-column: 2;
+  }
+
+  /* Reset de las listas: sin viñetas y en fila */
+  .site-nav ul,
+  .lang-switch {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .site-nav ul {
+    gap: 28px;
+  }
+
+  /* El borde transparente reserva el espacio para que la página activa no "salte" */
+  .site-nav a {
+    display: inline-block;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+    color: var(--color-text-muted);
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .site-nav a:hover {
+    color: var(--color-accent);
+  }
+  .site-nav a[aria-current='page'] {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .lang-switch {
+    grid-column: 3;
+    justify-self: end;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  /* Separador "|" entre idiomas, generado con CSS (no es contenido) */
+  .lang-switch li + li::before {
+    content: '|';
+    margin: 0 10px;
+    color: var(--color-border-strong);
+  }
+  .lang-switch a {
+    color: var(--color-text-muted);
+  }
+  .lang-switch a[aria-current='true'] {
+    color: var(--color-accent);
+  }
+
+  /* Pantallas angostas: navegación a la izquierda e idioma a la derecha */
+  @media (max-width: 640px) {
+    .site-header {
+      grid-template-columns: 1fr auto;
+    }
+    .site-nav {
+      grid-column: 1;
+    }
+    .lang-switch {
+      grid-column: 2;
+    }
+  }
+</style>

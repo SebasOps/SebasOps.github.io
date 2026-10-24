@@ -1,16 +1,24 @@
 ---
 // src/pages/en/index.astro
 /**
- * Página de inicio en inglés (/en/).
- * Usa el layout base y los textos del diccionario i18n.
+ * Home page in English (/en/).
+ * Composes the shared content (HomeContent) inside the layout,
+ * with the icon carousels on both sides.
  */
+ 
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import HomeContent from '../../components/HomeContent.astro';
 import { useTranslations } from '../../i18n/utils';
 
 const lang = 'en';
 const t = useTranslations(lang);
 ---
 
-<BaseLayout lang={lang} title={`${t('home.title')} | ${t('meta.siteName')}`} description={t('meta.description.home')}>
-  <h1>{t('home.title')} (EN)</h1>
+<BaseLayout
+  lang={lang}
+  title={`${t('home.title')} | ${t('meta.siteName')}`}
+  description={t('meta.description.home')}
+  rails
+>
+  <HomeContent lang={lang} />
 </BaseLayout>

@@ -34,6 +34,15 @@ export const ui = {
 
     // Inicio
     'home.title': 'Inicio',
+    'home.greeting': 'Hola, soy',
+    'home.role': 'Data Science Student | Full Stack Web Developer (Vue.js, Django)',
+    'home.contact.label': 'Contacto',
+    'projects.teicopos.title': 'E-commerce TeicoPOS',
+    'projects.teicopos.description': 'Plataforma de comercio electrónico multi-comercio para tiendas y restaurantes. 10 comercios activos.',
+    'projects.servicehub.title': 'service-hub',
+    'projects.servicehub.description': 'Reservas en línea para negocios que manejan citas: calendario, integración con Google Calendar, reportes, gastos e ingresos.',
+    'projects.next.title': 'Próximamente',
+    'projects.next.description': 'Proyecto de datos con un negocio real.',
 
     // Habilidades
     'skills.title': 'Habilidades',
@@ -67,6 +76,15 @@ export const ui = {
 
     // Home
     'home.title': 'Home',
+    'home.greeting': "Hi, I'm",
+    'home.role': 'Data Science Student | Full Stack Web Developer (Vue.js, Django)',
+    'home.contact.label': 'Contact',
+    'projects.teicopos.title': 'TeicoPOS E-commerce',
+    'projects.teicopos.description': 'Multi-store e-commerce platform for shops and restaurants. 10 active stores.',
+    'projects.servicehub.title': 'service-hub',
+    'projects.servicehub.description': 'Online booking for appointment-based businesses: calendar, Google Calendar integration, reports, expenses and income.',
+    'projects.next.title': 'Coming soon',
+    'projects.next.description': 'Data project with a real business.',
 
     // Skills
     'skills.title': 'Skills',

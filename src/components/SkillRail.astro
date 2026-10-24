@@ -8,6 +8,7 @@
  *  - reverse: invierte el orden de los iconos (para que dos carriles no vayan sincronizados).
  *  - duration: segundos por ciclo (más alto = más lento).
  * Variables CSS opcionales: --rail-width y --rail-height (por defecto 80px y 800px).
+ * La visibilidad (p. ej. ocultarlo en pantallas angostas) la decide el contenedor.
  */
  
 import { tools } from '../data/tools';
@@ -89,13 +90,6 @@ const items = Array.from({ length: COPIES }, () => ordered).flat();
     }
     to {
       transform: translateY(0);
-    }
-  }
-
-  /* En pantallas angostas se oculta: es decorativo y el contenido necesita el ancho */
-  @media (max-width: 900px) {
-    .rail {
-      display: none;
     }
   }
 </style>

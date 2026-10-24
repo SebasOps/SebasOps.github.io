@@ -9,12 +9,14 @@
  *  - image: imagen para compartir en redes (opcional).
  *  - noindex: true evita la indexación (p. ej. la página 404).
  *  - showNav: false oculta la navegación (p. ej. la página 404).
+ *  - rails: true muestra los carruseles de iconos a ambos lados.
  */
-
+ 
 import { Font } from 'astro:assets';
 import '../styles/global.css'; // Astro empaqueta y enlaza el CSS global
 import Navigation from '../components/Navigation.astro';
 import SeoHead from '../components/SeoHead.astro';
+import SkillRail from '../components/SkillRail.astro';
 import type { Lang } from '../i18n/utils';
 
 interface Props {
@@ -24,9 +26,18 @@ interface Props {
   image?: string;
   noindex?: boolean;
   showNav?: boolean;
+  rails?: boolean;
 }
 
-const { lang, title, description, image, noindex = false, showNav = true } = Astro.props;
+const {
+  lang,
+  title,
+  description,
+  image,
+  noindex = false,
+  showNav = true,
+  rails = false,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -44,10 +55,65 @@ const { lang, title, description, image, noindex = false, showNav = true } = Ast
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
   <body>
-    {showNav && <Navigation lang={lang} />}
-    {/* <main> marca la zona principal para lectores de pantalla y buscadores */}
-    <main>
-      <slot />
-    </main>
+    {/* Estructura: [carril] [columna central] [carril]. Sin rails, solo la columna. */}
+    <div class="shell">
+      {
+        rails && (
+          <div class="shell__rail">
+            <SkillRail />
+          </div>
+        )
+      }
+
+      <div class="shell__col">
+        {showNav && <Navigation lang={lang} />}
+        {/* <main> marca la zona principal para lectores de pantalla y buscadores */}
+        <main>
+          <slot />
+        </main>
+      </div>
+
+      {
+        rails && (
+          <div class="shell__rail">
+            {/* reverse y otra duración: los dos carriles no van sincronizados */}
+            <SkillRail reverse duration={42} />
+          </div>
+        )
+      }
+    </div>
   </body>
 </html>
+
+<style>
+  .shell {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 28px clamp(12px, 2vw, 24px);
+  }
+
+  /* min-width: 0 permite que la columna se encoja en lugar de desbordar */
+  .shell__col {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: var(--container-max);
+  }
+
+  /* sticky: los carriles se quedan a la vista al hacer scroll.
+     --rail-height lo lee SkillRail; el tope de 800px mantiene el bucle sin huecos. */
+  .shell__rail {
+    position: sticky;
+    top: 28px;
+    flex: none;
+    --rail-height: min(800px, calc(100vh - 56px));
+  }
+
+  /* El carril es decorativo: en pantallas angostas el contenido necesita el ancho */
+  @media (max-width: 900px) {
+    .shell__rail {
+      display: none;
+    }
+  }
+</style>

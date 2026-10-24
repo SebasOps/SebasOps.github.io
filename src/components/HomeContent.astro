@@ -1,0 +1,65 @@
+---
+// src/components/HomeContent.astro
+/**
+ * Contenido de la página de Inicio, compartido por /es/ y /en/.
+ * Dos columnas: presentación + habilidades a la izquierda, proyectos a la derecha.
+ * Props:
+ *  - lang: idioma de la página.
+ */
+ 
+import Hero from './Hero.astro';
+import SkillsSection from './SkillsSection.astro';
+import ProjectsPreview from './ProjectsPreview.astro';
+import type { Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<div class="home">
+  <div class="home__main">
+    <Hero lang={lang} />
+    <hr class="home__divider" />
+    <SkillsSection lang={lang} />
+  </div>
+
+  <div class="home__side">
+    <ProjectsPreview lang={lang} />
+  </div>
+</div>
+
+<style>
+  /* flex-wrap: en pantallas angostas la columna de proyectos baja debajo */
+  .home {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 40px;
+    padding-top: 48px;
+  }
+
+  /* flex: crecer, encoger, base; min-width: 0 evita desbordes horizontales */
+  .home__main {
+    flex: 1 1 480px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .home__side {
+    flex: 1 1 380px;
+    min-width: 0;
+    max-width: 460px;
+  }
+
+  .home__divider {
+    width: 100%;
+    margin: 8px 0;
+    border: 0;
+    border-top: 1px solid var(--color-border);
+  }
+</style>

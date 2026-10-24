@@ -1,0 +1,41 @@
+---
+// src/components/SkillsSection.astro
+/**
+ * Sección "Habilidades": título y los grupos definidos en src/data/skills.ts.
+ * Props:
+ *  - lang: idioma de la página.
+ */
+
+import SkillGroup from './SkillGroup.astro';
+import { skillGroups } from '../data/skills';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="skills" aria-labelledby="skills-title">
+  <h2 id="skills-title" class="skills__title">{t('skills.title')}</h2>
+  <div class="skills__groups">
+    {skillGroups.map((group) => <SkillGroup lang={lang} titleKey={group.titleKey} items={group.items} />)}
+  </div>
+</section>
+
+<style>
+  .skills__title {
+    margin: 0 0 22px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .skills__groups {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+</style>

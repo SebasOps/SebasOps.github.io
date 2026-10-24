@@ -1,46 +1,24 @@
 ---
 // src/pages/es/index.astro
 /**
- * Inicio (ES). TEMPORAL: banco de pruebas de los componentes reutilizables.
- * El diseño completo del Inicio reemplazará este contenido.
+ * Página de inicio en español (/es/).
+ * Compone el contenido compartido (HomeContent) dentro del layout,
+ * con los carruseles de iconos a los lados.
  */
-
+ 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import LinkButton from '../../components/LinkButton.astro';
-import SkillGroup from '../../components/SkillGroup.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
-import SkillRail from '../../components/SkillRail.astro';
-import { skillGroups } from '../../data/skills';
+import HomeContent from '../../components/HomeContent.astro';
 import { useTranslations } from '../../i18n/utils';
 
 const lang = 'es';
 const t = useTranslations(lang);
 ---
 
-<BaseLayout lang={lang} title={`${t('home.title')} | ${t('meta.siteName')}`} description={t('meta.description.home')}>
-  <div class="stage">
-    <SkillRail />
-
-    <div class="stage__content">
-      <!-- Aquí va el contenido de prueba que ya tenías: h1, botones, habilidades y tarjetas -->
-    </div>
-
-    <SkillRail reverse duration={42} />
-  </div>
+<BaseLayout
+  lang={lang}
+  title={`${t('home.title')} | ${t('meta.siteName')}`}
+  description={t('meta.description.home')}
+  rails
+>
+  <HomeContent lang={lang} />
 </BaseLayout>
-
-<style>
-  /* Carriles a los lados y contenido central con el ancho restante */
-  .stage {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 28px 8px;
-  }
-  .stage__content {
-    flex: 1 1 0;
-    min-width: 0; /* permite que el contenido se encoja en lugar de desbordar */
-    max-width: var(--container-max);
-  }
-</style>
