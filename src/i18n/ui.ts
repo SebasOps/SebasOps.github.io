@@ -51,7 +51,7 @@ export const ui = {
     'skills.infra': 'Infraestructura',
     'skills.learning': 'aprendiendo',
     'skills.apis': 'Integración de APIs',
-    'skills.servers': 'Administración de servidores',
+    'skills.servers': 'Manejo de servidores',
     'skills.deploy': 'Despliegue en producción',
 
     // Proyectos y CV
@@ -59,6 +59,17 @@ export const ui = {
     'projects.inDev': 'En desarrollo',
     'cv.es': 'Descargar CV (ES)',
     'cv.en': 'Descargar CV (EN)',
+
+    // Sobre mí
+    'about.intro': 'Soy estudiante de Ciencia de Datos y desarrollador web. He desplegado plataformas de e-commerce y reservas en línea en producción y hago análisis de datos con Python, SQL y Power BI. Busco mi primer rol como junior en datos y también tomo proyectos freelance de web y datos.',
+    'about.experience.title': 'Trayectoria',
+    'about.experience.hint': 'Abre cada experiencia para ver el detalle.',
+    'about.education.title': 'Formación',
+    'about.certifications.title': 'Certificaciones',
+    'about.languages.title': 'Idiomas',
+    'about.cta.title': '¿Quieres un proyecto web o de datos?',
+    'about.cta.text': 'Cuéntame qué necesitas y vemos cómo ayudarte.',
+    'about.cta.email': 'Escríbeme',
   },
   en: {
     // Metadata
@@ -93,7 +104,7 @@ export const ui = {
     'skills.infra': 'Infrastructure',
     'skills.learning': 'learning',
     'skills.apis': 'API integration',
-    'skills.servers': 'Server administration',
+    'skills.servers': 'Server management',
     'skills.deploy': 'Production deployment',
 
     // Projects and CV
@@ -101,5 +112,16 @@ export const ui = {
     'projects.inDev': 'In development',
     'cv.es': 'Download CV (ES)',
     'cv.en': 'Download CV (EN)',
+
+    // About 
+    'about.intro': "I'm a Data Science student and web developer. I've deployed e-commerce and online booking platforms to production and I work with data analysis using Python, SQL and Power BI. I'm looking for my first junior data role, and I also take on freelance web and data projects.",
+    'about.experience.title': 'Experience',
+    'about.experience.hint': 'Open each role to see the details.',
+    'about.education.title': 'Education',
+    'about.certifications.title': 'Certifications',
+    'about.languages.title': 'Languages',
+    'about.cta.title': 'Do you need a web or data project?',
+    'about.cta.text': "Tell me what you need and let's see how I can help.",
+    'about.cta.email': 'Email me',
   },
 } as const;

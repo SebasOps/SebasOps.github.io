@@ -2,16 +2,23 @@
 // src/pages/en/about/index.astro
 /**
  * About page in English (/en/about/).
- * Placeholder: it will hold your text, skills and certifications later.
+ * Composes the shared content (AboutContent) inside the layout,
+ * with the icon carousels on both sides.
  */
-
+ 
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AboutContent from '../../../components/AboutContent.astro';
 import { useTranslations } from '../../../i18n/utils';
 
 const lang = 'en';
 const t = useTranslations(lang);
 ---
 
-<BaseLayout lang={lang} title={`${t('nav.about')} | ${t('meta.siteName')}`} description={t('meta.description.about')}>
-  <h1>{t('nav.about')}</h1>
+<BaseLayout
+  lang={lang}
+  title={`${t('nav.about')} | ${t('meta.siteName')}`}
+  description={t('meta.description.about')}
+  rails
+>
+  <AboutContent lang={lang} />
 </BaseLayout>

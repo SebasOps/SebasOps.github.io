@@ -1,0 +1,78 @@
+---
+// src/components/ResumeBlock.astro
+/**
+ * Bloque de lista con título (formación, certificaciones, idiomas).
+ * Props:
+ *  - title: título del bloque (h2).
+ *  - items: elementos con `title` y, opcionalmente, `subtitle` y `meta` (p. ej. el periodo).
+ */
+ 
+interface Item {
+  title: string;
+  subtitle?: string;
+  meta?: string;
+}
+
+interface Props {
+  title: string;
+  items: Item[];
+}
+
+const { title, items } = Astro.props;
+---
+
+<section class="block">
+  <h2 class="block__title">{title}</h2>
+  <ul class="block__list">
+    {
+      items.map((item) => (
+        <li class="item">
+          <p class="item__title">{item.title}</p>
+          {item.subtitle && <p class="item__subtitle">{item.subtitle}</p>}
+          {item.meta && <p class="item__meta">{item.meta}</p>}
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .block__title {
+    margin: 0 0 16px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .block__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Línea de acento a la izquierda de cada elemento */
+  .item {
+    padding-left: 16px;
+    border-left: 2px solid var(--color-border-strong);
+  }
+  .item p {
+    margin: 0;
+  }
+  .item__title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .item__subtitle {
+    font-size: 14px;
+    color: var(--color-text-muted);
+  }
+  .item__meta {
+    margin-top: 2px;
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+</style>

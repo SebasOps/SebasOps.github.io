@@ -33,6 +33,7 @@ export const skillGroups: SkillGroupData[] = [
     titleKey: 'skills.web',
     items: [
       { label: 'Vue.js' },
+      { label: 'Astro' },
       { label: 'Django' },
       { label: 'FastAPI' },
       { labelKey: 'skills.apis' },

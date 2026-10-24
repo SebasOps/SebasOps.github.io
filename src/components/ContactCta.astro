@@ -1,0 +1,61 @@
+---
+// src/components/ContactCta.astro
+/**
+ * Cierre de la página "Sobre mí": invitación a contactar, con botones de
+ * correo y LinkedIn. Los datos de contacto salen de src/data/site.ts.
+ * Props:
+ *  - lang: idioma de la página.
+ */
+ 
+import LinkButton from './LinkButton.astro';
+import { site } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <h2 id="cta-title" class="cta__title">{t('about.cta.title')}</h2>
+  <p class="cta__text">{t('about.cta.text')}</p>
+  <div class="cta__actions">
+    <LinkButton href={`mailto:${site.email}`}>{t('about.cta.email')}</LinkButton>
+    <LinkButton href={site.linkedin} variant="secondary" external>LinkedIn</LinkButton>
+  </div>
+</section>
+
+<style>
+  .cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 32px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .cta__title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .cta__text {
+    margin: 0 0 8px;
+    max-width: 60ch;
+    color: var(--color-text-muted);
+  }
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+</style>

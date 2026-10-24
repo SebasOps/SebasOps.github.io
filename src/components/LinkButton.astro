@@ -6,6 +6,7 @@
  *  - href: destino.
  *  - variant: 'primary' (relleno) o 'secondary' (contorno).
  *  - download: si es true, el navegador descarga el archivo.
+ *  - external: si es true, abre en otra pestaña (con rel seguro).
  * El texto se pasa como contenido del componente (slot).
  */
 
@@ -13,12 +14,19 @@ interface Props {
   href: string;
   variant?: 'primary' | 'secondary';
   download?: boolean;
+  external?: boolean;
 }
 
-const { href, variant = 'primary', download = false } = Astro.props;
+const { href, variant = 'primary', download = false, external = false } = Astro.props;
 ---
 
-<a class={`btn btn--${variant}`} href={href} download={download ? '' : undefined}>
+<a
+  class={`btn btn--${variant}`}
+  href={href}
+  download={download ? '' : undefined}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+>
   <slot />
 </a>
 

@@ -1,0 +1,195 @@
+---
+// src/components/Timeline.astro
+/**
+ * Línea de tiempo vertical de experiencia. Las entradas con `details` se
+ * despliegan con <details>/<summary> nativos (sin JavaScript, accesibles con teclado).
+ * Props:
+ *  - lang: idioma de la página.
+ *  - entries: entradas (ver ExperienceEntry en src/data/experience.ts).
+ */
+ 
+import { localize, type Lang } from '../i18n/utils';
+import type { ExperienceEntry } from '../data/experience';
+
+interface Props {
+  lang: Lang;
+  entries: ExperienceEntry[];
+}
+
+const { lang, entries } = Astro.props;
+
+// Se resuelven los textos al idioma de la página una sola vez
+const items = entries.map((entry) => ({
+  id: entry.id,
+  role: localize(lang, entry.role),
+  org: entry.org,
+  kind: localize(lang, entry.kind),
+  period: localize(lang, entry.period),
+  summary: localize(lang, entry.summary),
+  details: entry.details ? localize(lang, entry.details) : [],
+}));
+---
+
+<ol class="timeline">
+  {
+    items.map((item) => {
+      // Con detalle: <details>/<summary>. Sin detalle: <div> con el mismo aspecto.
+      const expandable = item.details.length > 0;
+      const Wrapper = expandable ? 'details' : 'div';
+      const Head = expandable ? 'summary' : 'div';
+
+      return (
+        <li class="entry">
+          <p class="entry__period">{item.period}</p>
+          <Wrapper class="entry__card">
+            <Head class="entry__head">
+              <span class="entry__role">{item.role}</span>
+              <span class="entry__org">
+                {item.org} <span class="entry__kind">{item.kind}</span>
+              </span>
+              <span class="entry__summary">{item.summary}</span>
+              {/* El "+" es decorativo: el estado lo anuncia el propio <details> */}
+              {expandable && (
+                <span class="entry__toggle" aria-hidden="true">
+                  +
+                </span>
+              )}
+            </Head>
+            {
+              expandable && (
+                <ul class="entry__details">
+                  {item.details.map((detail) => (
+                    <li>{detail}</li>
+                  ))}
+                </ul>
+              )
+            }
+          </Wrapper>
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  /* Lista con la línea vertical a la izquierda (sin números ni viñetas) */
+  .timeline {
+    position: relative;
+    margin: 0;
+    padding: 0 0 0 28px;
+    list-style: none;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 5px;
+    width: 2px;
+    background: var(--color-border);
+  }
+
+  .entry {
+    position: relative;
+    padding-bottom: 28px;
+  }
+  .entry:last-child {
+    padding-bottom: 0;
+  }
+
+  /* Punto de la entrada, centrado sobre la línea */
+  .entry::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: -28px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--color-accent);
+    border-radius: 50%;
+    background: var(--color-surface);
+  }
+
+  .entry__period {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
+  .entry__card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  /* Cabecera de la tarjeta; el padding derecho deja lugar al botón "+" */
+  .entry__head {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 18px 22px;
+    list-style: none; /* oculta el triángulo nativo de <summary> */
+  }
+  summary.entry__head {
+    padding-right: 64px;
+    cursor: pointer;
+  }
+  .entry__head::-webkit-details-marker {
+    display: none; /* ídem para Safari */
+  }
+
+  .entry__role {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .entry__org {
+    font-size: 15px;
+    color: var(--color-text-muted);
+  }
+  .entry__kind {
+    margin-left: 8px;
+    padding: 2px 10px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .entry__summary {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* Botón "+": gira 45° y se vuelve "×" cuando el detalle está abierto */
+  .entry__toggle {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--color-accent);
+    transition: transform 0.2s;
+  }
+  details[open] > .entry__head .entry__toggle {
+    transform: rotate(45deg);
+  }
+
+  .entry__details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0 22px 20px 40px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+</style>

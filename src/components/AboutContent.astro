@@ -1,0 +1,132 @@
+---
+// src/components/AboutContent.astro
+/**
+ * Contenido de la página "Sobre mí", compartido por /es/about/ y /en/about/.
+ * Orden: presentación, trayectoria (timeline) con formación a un lado,
+ * habilidades y cierre de contacto.
+ * Props:
+ *  - lang: idioma de la página.
+ */
+
+import Timeline from './Timeline.astro';
+import ResumeBlock from './ResumeBlock.astro';
+import SkillsSection from './SkillsSection.astro';
+import ContactCta from './ContactCta.astro';
+import { experience } from '../data/experience';
+import { education, certifications, languages } from '../data/credentials';
+import { useTranslations, localize, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Se adaptan los datos al formato de ResumeBlock, ya en el idioma de la página
+const educationItems = education.map((entry) => ({
+  title: localize(lang, entry.title),
+  subtitle: entry.institution,
+  meta: localize(lang, entry.period),
+}));
+
+const certificationItems = certifications.map((cert) => ({
+  title: cert.name,
+  subtitle: cert.issuer,
+}));
+
+const languageItems = languages.map((item) => ({
+  title: localize(lang, item.language),
+  subtitle: localize(lang, item.level),
+}));
+---
+
+<div class="about">
+  <header class="about__intro">
+    <h1 class="about__title">{t('nav.about')}</h1>
+    <p class="about__lead">{t('about.intro')}</p>
+  </header>
+
+  <div class="about__grid">
+    <div class="about__main">
+      <section aria-labelledby="experience-title">
+        <h2 id="experience-title" class="about__heading">{t('about.experience.title')}</h2>
+        <p class="about__hint">{t('about.experience.hint')}</p>
+        <Timeline lang={lang} entries={experience} />
+      </section>
+
+      {/* Habilidades bajo la trayectoria: equilibra la altura con la columna lateral */}
+      <SkillsSection lang={lang} />
+    </div>
+
+    <div class="about__side">
+      <ResumeBlock title={t('about.education.title')} items={educationItems} />
+      <ResumeBlock title={t('about.certifications.title')} items={certificationItems} />
+      <ResumeBlock title={t('about.languages.title')} items={languageItems} />
+    </div>
+  </div>
+
+  <ContactCta lang={lang} />
+</div>
+
+<style>
+  .about {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+    padding-top: 48px;
+  }
+
+  .about__title {
+    margin: 0 0 16px;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+
+  /* max-width en ch: mantiene una longitud de línea cómoda de leer */
+  .about__lead {
+    margin: 0;
+    max-width: 64ch;
+    font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  /* Dos columnas; con flex-wrap la lateral baja debajo en pantallas angostas */
+  .about__grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 48px;
+  }
+  /* Columna principal: trayectoria y habilidades apiladas */
+  .about__main {
+    flex: 1 1 520px;
+    min-width: 0; /* evita desbordes horizontales */
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+  .about__side {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 320px;
+    gap: 36px;
+    min-width: 0;
+    max-width: 420px;
+  }
+
+  .about__heading {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .about__hint {
+    margin: 0 0 24px;
+    font-size: 14px;
+    color: var(--color-text-muted);
+  }
+</style>

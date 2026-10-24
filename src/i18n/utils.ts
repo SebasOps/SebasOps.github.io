@@ -27,6 +27,22 @@ export function useTranslations(lang: Lang) {
 }
 
 /**
+ * Contenido con una versión por idioma, para textos largos que viven junto a sus
+ * datos (trayectoria, formación). TypeScript exige ambos idiomas: si falta uno, no compila.
+ */
+export type Localized<T = string> = Record<Lang, T>;
+
+/**
+ * Elige la versión de un contenido localizado.
+ * @param lang - Idioma de la página.
+ * @param value - Contenido con una versión por idioma.
+ * @returns El contenido en el idioma pedido.
+ */
+export function localize<T>(lang: Lang, value: Localized<T>): T {
+  return value[lang];
+}
+
+/**
  * Construye la ruta de una página dentro de un idioma.
  * @param lang - Idioma destino.
  * @param slug - Segmento de la página ('' = inicio, 'projects', 'about').

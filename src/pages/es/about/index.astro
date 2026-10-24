@@ -2,16 +2,23 @@
 // src/pages/es/about/index.astro
 /**
  * Página "Sobre mí" en español (/es/about/).
- * Marcador de posición: luego tendrá tu texto, habilidades y certificaciones.
+ * Compone el contenido compartido (AboutContent) dentro del layout,
+ * con los carruseles de iconos a los lados.
  */
-
+ 
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AboutContent from '../../../components/AboutContent.astro';
 import { useTranslations } from '../../../i18n/utils';
 
 const lang = 'es';
 const t = useTranslations(lang);
 ---
 
-<BaseLayout lang={lang} title={`${t('nav.about')} | ${t('meta.siteName')}`} description={t('meta.description.about')}>
-  <h1>{t('nav.about')}</h1>
+<BaseLayout
+  lang={lang}
+  title={`${t('nav.about')} | ${t('meta.siteName')}`}
+  description={t('meta.description.about')}
+  rails
+>
+  <AboutContent lang={lang} />
 </BaseLayout>
