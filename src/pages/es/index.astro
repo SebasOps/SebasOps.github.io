@@ -1,10 +1,15 @@
 ---
 // src/pages/es/index.astro
 /**
- * Página de inicio en español (/es/).
- * Usa el layout base y los textos del diccionario i18n.
+ * Inicio (ES). TEMPORAL: banco de pruebas de los componentes reutilizables.
+ * El diseño completo del Inicio reemplazará este contenido.
  */
+
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import LinkButton from '../../components/LinkButton.astro';
+import SkillGroup from '../../components/SkillGroup.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { skillGroups } from '../../data/skills';
 import { useTranslations } from '../../i18n/utils';
 
 const lang = 'es';
@@ -12,5 +17,30 @@ const t = useTranslations(lang);
 ---
 
 <BaseLayout lang={lang} title={`${t('home.title')} | ${t('meta.siteName')}`}>
-  <h1>{t('home.title')} (ES)</h1>
+  <h1>{t('home.title')} (banco de pruebas)</h1>
+
+  <p>
+    <LinkButton href="#" download>{t('cv.es')}</LinkButton>
+    <LinkButton href="#" variant="secondary" download>{t('cv.en')}</LinkButton>
+  </p>
+
+  <h2>{t('skills.title')}</h2>
+  {skillGroups.map((g) => <SkillGroup lang={lang} titleKey={g.titleKey} items={g.items} />)}
+
+  <h2>{t('nav.projects')}</h2>
+  <ProjectCard
+    title="E-commerce"
+    description="Texto de prueba de la tarjeta."
+    href="#"
+    linkLabel={t('projects.view')}
+    placeholder="[Captura]"
+  />
+  <ProjectCard
+    title="service-hub"
+    description="Texto de prueba de la tarjeta."
+    href="#"
+    linkLabel={t('projects.view')}
+    placeholder="[Captura]"
+    status={t('projects.inDev')}
+  />
 </BaseLayout>

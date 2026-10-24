@@ -1,0 +1,67 @@
+---
+// src/components/SkillGroup.astro
+/**
+ * Un grupo de habilidades: título del grupo + lista de etiquetas.
+ * Props:
+ *  - lang: idioma de la página (para traducir título y nombres).
+ *  - titleKey: clave i18n del título del grupo.
+ *  - items: habilidades (ver SkillItem en src/data/skills.ts).
+ */
+
+import Tag from './Tag.astro';
+import { useTranslations, type Lang } from '../i18n/utils';
+import type { SkillItem } from '../data/skills';
+import type { UiKey } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  titleKey: UiKey;
+  items: SkillItem[];
+}
+
+const { lang, titleKey, items } = Astro.props;
+const t = useTranslations(lang);
+
+// Resuelve el texto de cada habilidad: traducido (labelKey) o literal (label)
+const entries = items.map((item) => ({
+  text: 'labelKey' in item ? t(item.labelKey) : item.label,
+  learning: item.learning ?? false,
+}));
+---
+
+<section class="group">
+  <h3 class="group__title">{t(titleKey)}</h3>
+  <ul class="group__list">
+    {
+      entries.map(({ text, learning }) => (
+        <li>
+          <Tag learning={learning}>
+            {text}
+            {learning && ` · ${t('skills.learning')}`}
+          </Tag>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .group__title {
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* Lista sin viñetas; las etiquetas fluyen en varias líneas */
+  .group__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

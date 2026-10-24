@@ -1,0 +1,61 @@
+---
+// src/components/LinkButton.astro
+/**
+ * Botón en forma de enlace (CV, contacto...).
+ * Props:
+ *  - href: destino.
+ *  - variant: 'primary' (relleno) o 'secondary' (contorno).
+ *  - download: si es true, el navegador descarga el archivo.
+ * El texto se pasa como contenido del componente (slot).
+ */
+
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary';
+  download?: boolean;
+}
+
+const { href, variant = 'primary', download = false } = Astro.props;
+---
+
+<a class={`btn btn--${variant}`} href={href} download={download ? '' : undefined}>
+  <slot />
+</a>
+
+<style>
+  /* Base común a ambas variantes */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 28px;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  /* Variante principal: fondo de acento */
+  .btn--primary {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .btn--primary:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+    color: var(--color-on-accent);
+  }
+
+  /* Variante secundaria: contorno */
+  .btn--secondary {
+    background: var(--color-surface);
+    border-color: var(--color-border-strong);
+    color: var(--color-text);
+  }
+  .btn--secondary:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+</style>

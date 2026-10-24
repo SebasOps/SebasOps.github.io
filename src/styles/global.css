@@ -17,6 +17,8 @@
   --color-accent: #1d4ed8;          /* color de acento: enlaces y botones */
   --color-accent-hover: #1e3a8a;    /* acento al pasar el cursor */
   --color-on-accent: #ffffff;       /* texto sobre fondos de acento */
+  --color-border-strong: #c7d0e2;   /* bordes de botones y etiquetas */
+  --color-surface-alt: #eef2f9;     /* fondo de zonas de imagen y marcadores */
 
   /* Tipografía: --font-inter la define Astro; sans-serif es el respaldo */
   --font-sans: var(--font-inter), sans-serif;
