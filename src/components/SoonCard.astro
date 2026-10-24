@@ -1,0 +1,47 @@
+---
+// src/components/SoonCard.astro
+/**
+ * Tarjeta reservada para el próximo proyecto (de datos). Borde punteado:
+ * indica que es un espacio reservado, no un proyecto.
+ * Props:
+ *  - lang: idioma de la página.
+ *  - headingLevel: nivel del título (2 o 3) para no saltar niveles según la página.
+ */
+
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  headingLevel?: 2 | 3;
+}
+
+const { lang, headingLevel = 3 } = Astro.props;
+const t = useTranslations(lang);
+
+// Etiqueta de título dinámica (h2 o h3)
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
+---
+
+<article class="soon">
+  <Heading class="soon__title">{t('projects.next.title')}</Heading>
+  <p class="soon__text">{t('projects.next.description')}</p>
+</article>
+
+<style>
+  .soon {
+    padding: 22px;
+    border: 1.5px dashed var(--color-border-strong);
+    border-radius: var(--radius-md);
+  }
+  .soon__title {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .soon__text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+</style>

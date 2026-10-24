@@ -1,17 +1,22 @@
 ---
 // src/pages/en/projects/index.astro
 /**
- * Projects page in English (/en/projects/).
- * Placeholder: it will list the project cards later.
+ * Projects list in English (/en/projects/).
+ * Composes the shared content (ProjectsList) inside the layout.
  */
 
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProjectsList from '../../../components/ProjectsList.astro';
 import { useTranslations } from '../../../i18n/utils';
 
 const lang = 'en';
 const t = useTranslations(lang);
 ---
 
-<BaseLayout lang={lang} title={`${t('nav.projects')} | ${t('meta.siteName')}`} description={t('meta.description.projects')}>
-  <h1>{t('nav.projects')}</h1>
+<BaseLayout
+  lang={lang}
+  title={`${t('nav.projects')} | ${t('meta.siteName')}`}
+  description={t('meta.description.projects')}
+>
+  <ProjectsList lang={lang} />
 </BaseLayout>

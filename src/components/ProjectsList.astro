@@ -1,0 +1,77 @@
+---
+// src/components/ProjectsList.astro
+/**
+ * Contenido de la página de listado de proyectos (/es/projects/ y /en/projects/):
+ * título, introducción y una cuadrícula de tarjetas.
+ * Props:
+ *  - lang: idioma de la página.
+ */
+
+import ProjectCard from './ProjectCard.astro';
+import SoonCard from './SoonCard.astro';
+import { projects } from '../data/projects';
+import { useTranslations, localize, localizedPath, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="list">
+  <header class="list__header">
+    <h1 class="list__title">{t('nav.projects')}</h1>
+    <p class="list__intro">{t('projects.page.intro')}</p>
+  </header>
+
+  {/* auto-fill + minmax: tantas columnas como quepan, sin media queries */}
+  <div class="list__grid">
+    {
+      projects.map((project) => (
+        <ProjectCard
+          title={localize(lang, project.name)}
+          description={localize(lang, project.summary)}
+          href={localizedPath(lang, `projects/${project.slug}`)}
+          linkLabel={t('projects.view')}
+          image={project.cover}
+          status={project.inDevelopment ? t('projects.inDev') : undefined}
+          headingLevel={2}
+        />
+      ))
+    }
+    <SoonCard lang={lang} headingLevel={2} />
+  </div>
+</section>
+
+<style>
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding-top: 48px;
+  }
+
+  .list__title {
+    margin: 0 0 12px;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  .list__intro {
+    margin: 0;
+    max-width: 64ch;
+    font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .list__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    align-items: start;
+  }
+</style>

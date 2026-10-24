@@ -1,0 +1,270 @@
+---
+// src/components/ProjectGallery.astro
+/**
+ * Galería manual de capturas con miniaturas, flechas y contador.
+ * Mejora progresiva: sin JavaScript se ven todas las capturas apiladas; con
+ * JavaScript se muestra una a la vez y aparecen los controles.
+ * Props:
+ *  - lang: idioma de la página.
+ *  - images: capturas (ver GalleryImage en src/data/projects.ts).
+ */
+ 
+import { Image } from 'astro:assets';
+import { useTranslations, localize, type Lang } from '../i18n/utils';
+import type { GalleryImage } from '../data/projects';
+
+interface Props {
+  lang: Lang;
+  images: GalleryImage[];
+}
+
+const { lang, images } = Astro.props;
+const t = useTranslations(lang);
+
+// Textos ya resueltos al idioma de la página
+const slides = images.map((image) => ({
+  src: image.src,
+  alt: localize(lang, image.alt),
+  caption: localize(lang, image.caption),
+}));
+---
+
+<section
+  class="gallery"
+  aria-label={t('project.gallery.label')}
+  data-gallery
+  data-image-word={t('project.gallery.image')}
+  data-of-word={t('project.gallery.of')}
+>
+  <div class="gallery__viewport">
+    {
+      slides.map((slide, index) => (
+        <figure class="slide" data-slide>
+          {/* widths + sizes: Astro genera varios tamaños y el navegador elige el adecuado */}
+          <Image
+            src={slide.src}
+            alt={slide.alt}
+            widths={[640, 960, 1440]}
+            sizes="(max-width: 960px) 100vw, 960px"
+            loading={index === 0 ? 'eager' : 'lazy'}
+          />
+          <figcaption>{slide.caption}</figcaption>
+        </figure>
+      ))
+    }
+  </div>
+
+  {/* Controles ocultos hasta que el script los activa (sin JS no hacen falta) */}
+  <div class="gallery__controls" data-controls hidden>
+    <button type="button" class="gallery__btn" data-prev aria-label={t('project.gallery.prev')}>
+      <span aria-hidden="true">‹</span>
+    </button>
+    {/* Región en vivo: anuncia la captura actual a lectores de pantalla */}
+    <p class="gallery__counter" aria-live="polite">
+      <span data-count></span>
+      <span class="sr-only" data-caption></span>
+    </p>
+    <button type="button" class="gallery__btn" data-next aria-label={t('project.gallery.next')}>
+      <span aria-hidden="true">›</span>
+    </button>
+  </div>
+
+  <ul class="gallery__thumbs" aria-label={t('project.gallery.thumbs')} data-thumbs hidden>
+    {
+      slides.map((slide, index) => (
+        <li>
+          <button
+            type="button"
+            class="thumb"
+            data-thumb={index}
+            aria-label={`${t('project.gallery.image')} ${index + 1}: ${slide.caption}`}
+          >
+            <Image src={slide.src} alt="" width={160} height={87} />
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="gallery__note">{t('project.gallery.testData')}</p>
+</section>
+
+<script>
+  /**
+   * Activa la galería: muestra una captura a la vez, con flechas (también con
+   * las teclas ← →), miniaturas y contador. Si hay menos de 2 capturas no hace nada.
+   */
+  function initGallery(root: HTMLElement): void {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slide]'));
+    const thumbs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-thumb]'));
+    const controls = root.querySelector<HTMLElement>('[data-controls]');
+    const thumbList = root.querySelector<HTMLElement>('[data-thumbs]');
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-next]');
+    const count = root.querySelector<HTMLElement>('[data-count]');
+    const caption = root.querySelector<HTMLElement>('[data-caption]');
+
+    if (slides.length < 2 || !controls || !thumbList || !prev || !next || !count || !caption) {
+      return;
+    }
+
+    const imageWord = root.dataset.imageWord ?? '';
+    const ofWord = root.dataset.ofWord ?? '/';
+    let current = 0;
+
+    /** Muestra la captura `index`; al pasar del último vuelve al primero y viceversa. */
+    function show(index: number): void {
+      current = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, i) => {
+        slide.hidden = i !== current;
+      });
+      thumbs.forEach((thumb, i) => {
+        if (i === current) {
+          thumb.setAttribute('aria-current', 'true');
+        } else {
+          thumb.removeAttribute('aria-current');
+        }
+      });
+
+      count!.textContent = `${imageWord} ${current + 1} ${ofWord} ${slides.length}`;
+      caption!.textContent = slides[current].querySelector('figcaption')?.textContent ?? '';
+    }
+
+    prev.addEventListener('click', () => show(current - 1));
+    next.addEventListener('click', () => show(current + 1));
+    thumbs.forEach((thumb, i) => thumb.addEventListener('click', () => show(i)));
+
+    // Teclado: flechas izquierda y derecha mientras el foco esté dentro de la galería
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        show(current - 1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(current + 1);
+      }
+    });
+
+    controls.hidden = false;
+    thumbList.hidden = false;
+    show(0);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach(initGallery);
+</script>
+
+<style>
+  /* Ancho máximo cómodo para capturas con texto; centrada en la página */
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 960px;
+    margin-inline: auto;
+  }
+
+  /* Sin JS: capturas apiladas. Con JS: solo la activa (las demás llevan `hidden`). */
+  .gallery__viewport {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .slide {
+    margin: 0;
+  }
+  .slide[hidden] {
+    display: none;
+  }
+  .slide :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-alt);
+  }
+  .slide figcaption {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-text-muted);
+  }
+
+  /* [hidden] se repite porque `display: flex` anularía el atributo */
+  .gallery__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .gallery__controls[hidden] {
+    display: none;
+  }
+  .gallery__btn {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .gallery__btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+  .gallery__counter {
+    margin: 0;
+    min-width: 11ch;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  /* Todas las miniaturas visibles, en varias filas si hace falta:
+     así se ve de inmediato que hay más capturas */
+  .gallery__thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .gallery__thumbs[hidden] {
+    display: none;
+  }
+  .thumb {
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    background: none;
+    overflow: hidden;
+    opacity: 0.7;
+    cursor: pointer;
+  }
+  .thumb :global(img) {
+    display: block;
+    width: 112px;
+    height: auto;
+  }
+  .thumb:hover {
+    opacity: 1;
+  }
+  .thumb[aria-current='true'] {
+    border-color: var(--color-accent);
+    opacity: 1;
+  }
+
+  .gallery__note {
+    margin: 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+</style>

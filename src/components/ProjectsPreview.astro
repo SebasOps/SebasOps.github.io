@@ -1,15 +1,16 @@
 ---
 // src/components/ProjectsPreview.astro
 /**
- * Columna de proyectos del Inicio: tarjetas de src/data/projects.ts más una
- * tarjeta reservada para el próximo proyecto (de datos).
+ * Columna de proyectos del Inicio: una tarjeta por proyecto (src/data/projects.ts)
+ * más la tarjeta reservada para el próximo proyecto.
  * Props:
  *  - lang: idioma de la página.
  */
- 
+
 import ProjectCard from './ProjectCard.astro';
+import SoonCard from './SoonCard.astro';
 import { projects } from '../data/projects';
-import { useTranslations, localizedPath, type Lang } from '../i18n/utils';
+import { useTranslations, localize, localizedPath, type Lang } from '../i18n/utils';
 
 interface Props {
   lang: Lang;
@@ -17,9 +18,6 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-
-// Mientras no existan las páginas de detalle, todas las tarjetas llevan al listado
-const projectsHref = localizedPath(lang, 'projects');
 ---
 
 <section class="projects" aria-labelledby="projects-title">
@@ -28,21 +26,17 @@ const projectsHref = localizedPath(lang, 'projects');
   {
     projects.map((project) => (
       <ProjectCard
-        title={t(project.titleKey)}
-        description={t(project.descriptionKey)}
-        href={projectsHref}
+        title={localize(lang, project.name)}
+        description={localize(lang, project.summary)}
+        href={localizedPath(lang, `projects/${project.slug}`)}
         linkLabel={t('projects.view')}
-        placeholder={project.placeholder}
+        image={project.cover}
         status={project.inDevelopment ? t('projects.inDev') : undefined}
       />
     ))
   }
 
-  {/* Espacio reservado para el futuro proyecto de datos */}
-  <article class="soon">
-    <h3 class="soon__title">{t('projects.next.title')}</h3>
-    <p class="soon__text">{t('projects.next.description')}</p>
-  </article>
+  <SoonCard lang={lang} />
 </section>
 
 <style>
@@ -57,23 +51,5 @@ const projectsHref = localizedPath(lang, 'projects');
     font-size: 28px;
     font-weight: 700;
     letter-spacing: -0.02em;
-  }
-
-  /* Borde punteado: indica visualmente que es un espacio reservado */
-  .soon {
-    padding: 22px;
-    border: 1.5px dashed var(--color-border-strong);
-    border-radius: var(--radius-md);
-  }
-  .soon__title {
-    margin: 0 0 6px;
-    font-size: 18px;
-    font-weight: 700;
-  }
-  .soon__text {
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.5;
-    color: var(--color-text-muted);
   }
 </style>

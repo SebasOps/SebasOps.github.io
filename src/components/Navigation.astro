@@ -40,10 +40,13 @@ const links = [
       {
         links.map(({ key, slug }) => {
           const href = localizedPath(lang, slug);
+          // Página exacta -> "page"; una página dentro de la sección (p. ej. un proyecto) -> "true"
+          const current =
+            currentPath === href ? 'page' : slug && currentPath.startsWith(href) ? 'true' : undefined;
           return (
             <li>
-              {/* aria-current="page" indica a lectores de pantalla la página activa */}
-              <a href={href} aria-current={currentPath === href ? 'page' : undefined}>
+              {/* aria-current indica a lectores de pantalla dónde está la persona */}
+              <a href={href} aria-current={current}>
                 {t(key)}
               </a>
             </li>
@@ -112,7 +115,7 @@ const links = [
   .site-nav a:hover {
     color: var(--color-accent);
   }
-  .site-nav a[aria-current='page'] {
+  .site-nav a[aria-current] {
     color: var(--color-accent);
     border-bottom-color: var(--color-accent);
   }

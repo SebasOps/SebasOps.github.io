@@ -6,9 +6,11 @@
  *  - title, description: textos de la tarjeta.
  *  - href: página de detalle del proyecto.
  *  - linkLabel: texto del enlace (ej. "Ver proyecto").
- *  - image / imageAlt: captura opcional (se optimiza con astro:assets).
+ *  - image: portada opcional (se optimiza con astro:assets). Es decorativa (alt vacío)
+ *    porque el título de la tarjeta ya nombra el proyecto.
  *  - placeholder: texto que se muestra mientras no hay imagen.
  *  - status: etiqueta opcional de estado (ej. "En desarrollo").
+ *  - headingLevel: nivel del título (2 o 3) para no saltar niveles según la página.
  */
 
 import { Image } from 'astro:assets';
@@ -20,24 +22,36 @@ interface Props {
   href: string;
   linkLabel: string;
   image?: ImageMetadata;
-  imageAlt?: string;
   placeholder?: string;
   status?: string;
+  headingLevel?: 2 | 3;
 }
 
-const { title, description, href, linkLabel, image, imageAlt = '', placeholder, status } =
+const { title, description, href, linkLabel, image, placeholder, status, headingLevel = 3 } =
   Astro.props;
+
+// Etiqueta de título dinámica (h2 o h3)
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
 ---
 
 <article class="card">
   <div class="card__media">
-    {image ? <Image src={image} alt={imageAlt} /> : <span>{placeholder}</span>}
+    {
+      image ? (
+        <Image src={image} alt="" widths={[400, 800]} sizes="(max-width: 900px) 100vw, 460px" />
+      ) : (
+        <span>{placeholder}</span>
+      )
+    }
     {status && <span class="card__status">{status}</span>}
   </div>
   <div class="card__body">
-    <h3 class="card__title">{title}</h3>
+    <Heading class="card__title">{title}</Heading>
     <p class="card__text">{description}</p>
-    <a class="card__link" href={href}>{linkLabel} <span aria-hidden="true">→</span></a>
+    {/* El nombre del proyecto va oculto en el enlace: "Ver proyecto" solo sería ambiguo */}
+    <a class="card__link" href={href}>
+      {linkLabel}<span class="sr-only"> — {title}</span> <span aria-hidden="true">→</span>
+    </a>
   </div>
 </article>
 
@@ -66,16 +80,16 @@ const { title, description, href, linkLabel, image, imageAlt = '', placeholder, 
     object-fit: cover;
   }
 
-  /* Etiqueta de estado, esquina superior derecha (color de aviso propio) */
+  /* Etiqueta de estado, esquina superior derecha */
   .card__status {
     position: absolute;
     top: 14px;
     right: 14px;
     padding: 5px 12px;
-    border: 1px solid #e8c766;
+    border: 1px solid var(--color-warning-border);
     border-radius: var(--radius-pill);
-    background: #fff4d6;
-    color: #6b4a00;
+    background: var(--color-warning-bg);
+    color: var(--color-warning-text);
     font-size: 12px;
     font-weight: 600;
   }

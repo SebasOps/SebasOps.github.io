@@ -1,0 +1,31 @@
+---
+// src/pages/en/projects/[slug].astro
+/**
+ * Project detail page in English (/en/projects/<slug>/).
+ * getStaticPaths generates one page per project in src/data/projects.ts.
+ */
+ 
+import type { InferGetStaticPropsType } from 'astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProjectDetail from '../../../components/ProjectDetail.astro';
+import { projects } from '../../../data/projects';
+import { useTranslations, localize } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const lang = 'en';
+const t = useTranslations(lang);
+const { project } = Astro.props as Props;
+---
+
+<BaseLayout
+  lang={lang}
+  title={`${localize(lang, project.name)} | ${t('meta.siteName')}`}
+  description={localize(lang, project.summary)}
+>
+  <ProjectDetail lang={lang} project={project} />
+</BaseLayout>

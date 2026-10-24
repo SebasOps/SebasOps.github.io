@@ -1,0 +1,114 @@
+---
+// src/components/IntegrationFlow.astro
+/**
+ * Flujo de integración como pasos numerados. Cada paso indica entre qué
+ * actores ocurre (de → a), qué es y qué pasa.
+ * Props:
+ *  - lang: idioma de la página.
+ *  - flow: datos del flujo (ver FlowData en src/data/projects.ts).
+ */
+ 
+import { localize, type Lang } from '../i18n/utils';
+import type { FlowData } from '../data/projects';
+
+interface Props {
+  lang: Lang;
+  flow: FlowData;
+}
+
+const { lang, flow } = Astro.props;
+
+// Textos resueltos al idioma de la página
+const steps = flow.steps.map((step) => ({
+  from: localize(lang, step.from),
+  to: localize(lang, step.to),
+  title: localize(lang, step.title),
+  text: localize(lang, step.text),
+}));
+---
+
+<section class="flow" aria-labelledby="flow-title">
+  <h2 id="flow-title" class="flow__title">{localize(lang, flow.title)}</h2>
+  <ol class="flow__steps">
+    {
+      steps.map((step) => (
+        <li class="step">
+          {/* La flecha es decorativa: el orden de los actores ya indica la dirección */}
+          <p class="step__route">
+            <span>{step.from}</span>
+            <span aria-hidden="true">→</span>
+            <span>{step.to}</span>
+          </p>
+          <h3 class="step__title">{step.title}</h3>
+          <p class="step__text">{step.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .flow__title {
+    margin: 0 0 20px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  /* counter-reset/counter-increment numeran los pasos con CSS, sin tocar el HTML */
+  .flow__steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .step {
+    counter-increment: step;
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  /* Número del paso en un círculo de acento */
+  .step::before {
+    content: counter(step);
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 12px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .step__route {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 6px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .step__title {
+    margin: 0 0 6px;
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .step__text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+</style>

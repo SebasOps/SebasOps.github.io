@@ -1,0 +1,244 @@
+---
+// src/components/ProjectDetail.astro
+/**
+ * Página de detalle de un proyecto, compartida por /es/projects/<slug>/ y /en/projects/<slug>/.
+ * Orden: cabecera, capturas, video (si hay), contexto y funcionalidades junto a la
+ * ficha (rol, stack, integraciones, resultado, enlaces) y, si existe, el flujo de integración.
+ * Props:
+ *  - lang: idioma de la página.
+ *  - project: datos del proyecto (ver Project en src/data/projects.ts).
+ */
+ 
+import ProjectGallery from './ProjectGallery.astro';
+import ProjectVideo from './ProjectVideo.astro';
+import IntegrationFlow from './IntegrationFlow.astro';
+import LinkButton from './LinkButton.astro';
+import Tag from './Tag.astro';
+import type { Project } from '../data/projects';
+import { useTranslations, localize, localizedPath, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  project: Project;
+}
+
+const { lang, project } = Astro.props;
+const t = useTranslations(lang);
+
+const features = localize(lang, project.features);
+---
+
+<article class="detail">
+  <a class="detail__back" href={localizedPath(lang, 'projects')}>
+    <span aria-hidden="true">←</span> {t('project.back')}
+  </a>
+
+  <header class="detail__header">
+    <h1 class="detail__title">{localize(lang, project.name)}</h1>
+    {project.inDevelopment && <span class="detail__badge">{t('projects.inDev')}</span>}
+    <p class="detail__summary">{localize(lang, project.summary)}</p>
+  </header>
+
+  <ProjectGallery lang={lang} images={project.gallery} />
+
+  {
+    project.video && (
+      <section class="detail__video" aria-labelledby="video-title">
+        <h2 id="video-title" class="detail__heading">{t('project.section.video')}</h2>
+        <ProjectVideo lang={lang} video={project.video} />
+      </section>
+    )
+  }
+
+  <div class="detail__grid">
+    <div class="detail__main">
+      <section aria-labelledby="context-title">
+        <h2 id="context-title" class="detail__heading">{t('project.section.context')}</h2>
+        <p class="detail__text">{localize(lang, project.context)}</p>
+      </section>
+
+      <section aria-labelledby="features-title">
+        <h2 id="features-title" class="detail__heading">{t('project.section.features')}</h2>
+        <ul class="detail__features">
+          {features.map((feature) => <li>{feature}</li>)}
+        </ul>
+      </section>
+    </div>
+
+    {/* Ficha lateral: datos breves de consulta rápida */}
+    <div class="detail__side">
+      <section class="fact" aria-labelledby="role-title">
+        <h2 id="role-title" class="fact__title">{t('project.section.role')}</h2>
+        <p class="fact__text">{localize(lang, project.role)}</p>
+      </section>
+
+      <section class="fact" aria-labelledby="stack-title">
+        <h2 id="stack-title" class="fact__title">{t('project.section.stack')}</h2>
+        <ul class="tags">
+          {project.stack.map((item) => <li><Tag>{item}</Tag></li>)}
+        </ul>
+      </section>
+
+      {
+        project.integrations && (
+          <section class="fact" aria-labelledby="integrations-title">
+            <h2 id="integrations-title" class="fact__title">{t('project.section.integrations')}</h2>
+            <ul class="tags">
+              {project.integrations.map((item) => <li><Tag>{item}</Tag></li>)}
+            </ul>
+          </section>
+        )
+      }
+
+      <section class="fact" aria-labelledby="result-title">
+        <h2 id="result-title" class="fact__title">{t('project.section.result')}</h2>
+        <p class="fact__text">{localize(lang, project.result)}</p>
+      </section>
+
+      {
+        project.links.length > 0 && (
+          <section class="fact" aria-labelledby="links-title">
+            <h2 id="links-title" class="fact__title">{t('project.section.links')}</h2>
+            <ul class="links">
+              {
+                project.links.map((link) => (
+                  <li>
+                    <LinkButton href={link.href} variant="secondary" external>
+                      {localize(lang, link.label)}
+                    </LinkButton>
+                  </li>
+                ))
+              }
+            </ul>
+          </section>
+        )
+      }
+    </div>
+  </div>
+
+  {project.flow && <IntegrationFlow lang={lang} flow={project.flow} />}
+</article>
+
+<style>
+  .detail {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding-top: 36px;
+  }
+
+  .detail__back {
+    align-self: flex-start;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .detail__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+  }
+  .detail__title {
+    margin: 0;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  .detail__badge {
+    padding: 5px 12px;
+    border: 1px solid var(--color-warning-border);
+    border-radius: var(--radius-pill);
+    background: var(--color-warning-bg);
+    color: var(--color-warning-text);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  /* flex-basis 100%: el resumen baja a su propia línea bajo el título */
+  .detail__summary {
+    flex-basis: 100%;
+    margin: 0;
+    max-width: 64ch;
+    font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .detail__heading {
+    margin: 0 0 14px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .detail__video {
+    text-align: center;
+  }
+
+  /* Dos columnas; con flex-wrap la ficha baja debajo en pantallas angostas */
+  .detail__grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 48px;
+  }
+  .detail__main {
+    display: flex;
+    flex: 1 1 480px;
+    flex-direction: column;
+    gap: 36px;
+    min-width: 0;
+  }
+  .detail__side {
+    display: flex;
+    flex: 1 1 300px;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+    max-width: 400px;
+  }
+
+  .detail__text {
+    margin: 0;
+    max-width: 64ch;
+    line-height: 1.65;
+  }
+  .detail__features {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 64ch;
+    margin: 0;
+    padding-left: 20px;
+    line-height: 1.55;
+  }
+
+  /* Cada dato de la ficha con una línea de acento a la izquierda */
+  .fact {
+    padding-left: 16px;
+    border-left: 2px solid var(--color-border-strong);
+  }
+  .fact__title {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .fact__text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .tags,
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

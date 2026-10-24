@@ -19,6 +19,9 @@
   --color-on-accent: #ffffff;       /* texto sobre fondos de acento */
   --color-border-strong: #c7d0e2;   /* bordes de botones y etiquetas */
   --color-surface-alt: #eef2f9;     /* fondo de zonas de imagen y marcadores */
+  --color-warning-bg: #fff4d6;      /* fondo de avisos (p. ej. "En desarrollo") */
+  --color-warning-border: #e8c766;  /* borde de avisos */
+  --color-warning-text: #6b4a00;    /* texto de avisos */
 
   /* Tipografía: --font-inter la define Astro; sans-serif es el respaldo */
   --font-sans: var(--font-inter), sans-serif;
@@ -69,6 +72,19 @@ a:hover {
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
+}
+
+/* .sr-only: oculta el texto a la vista pero lo deja disponible para lectores de pantalla. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* Accesibilidad: sin animaciones para quien pidió reducir el movimiento. */

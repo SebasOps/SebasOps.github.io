@@ -1,0 +1,67 @@
+---
+// src/components/ProjectVideo.astro
+/**
+ * Video del proyecto (MP4 alojado en public/videos/).
+ * - preload="none": no descarga nada hasta que la persona pulsa reproducir.
+ * - Sin autoplay: nunca se reproduce solo.
+ * Props:
+ *  - lang: idioma de la página.
+ *  - video: datos del video (ver ProjectVideoData en src/data/projects.ts).
+ */
+ 
+import { useTranslations, localize, type Lang } from '../i18n/utils';
+import type { ProjectVideoData } from '../data/projects';
+
+interface Props {
+  lang: Lang;
+  video: ProjectVideoData;
+}
+
+const { lang, video } = Astro.props;
+const t = useTranslations(lang);
+const title = localize(lang, video.title);
+---
+
+<figure class="video">
+  <video
+    controls
+    preload="none"
+    playsinline
+    poster={video.poster}
+    aria-label={title}
+    style={`--ratio: ${video.aspectRatio}`}
+  >
+    <source src={video.src} type="video/mp4" />
+    {/* Contenido de respaldo para navegadores sin soporte de <video> */}
+    <p>{t('project.video.fallback')} <a href={video.src}>{t('project.video.download')}</a></p>
+  </video>
+  <figcaption>{title}</figcaption>
+</figure>
+
+<style>
+  .video {
+    margin: 0;
+    text-align: center;
+  }
+
+  /* Alto limitado y ancho derivado de la proporción: el video vertical no ocupa toda la pantalla.
+     object-fit: contain evita deformarlo si el contenedor y el video no coinciden. */
+  .video video {
+    display: block;
+    height: min(70vh, 640px);
+    width: auto;
+    max-width: 100%;
+    margin-inline: auto;
+    aspect-ratio: var(--ratio);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-alt);
+    object-fit: contain;
+  }
+
+  .video figcaption {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--color-text-muted);
+  }
+</style>
