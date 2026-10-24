@@ -1,0 +1,80 @@
+/* src/styles/global.css */
+/**
+ * Estilos globales del sitio.
+ * - Tokens de diseño como variables CSS (colores, tipografía, radios, anchos).
+ * - Reset mínimo y reglas base (fondo, texto, enlaces, foco visible).
+ * Los componentes deben usar estas variables en lugar de valores sueltos.
+ */
+
+/* :root = elemento <html>. Variables que usa todo el sitio. */
+:root {
+  /* Colores */
+  --color-bg: #fafbfd;              /* fondo de la página */
+  --color-surface: #ffffff;         /* fondo de tarjetas y cajas */
+  --color-text: #0b1530;            /* texto principal */
+  --color-text-muted: #3a4666;      /* texto secundario */
+  --color-border: #e3e8f2;          /* bordes y separadores */
+  --color-accent: #1d4ed8;          /* color de acento: enlaces y botones */
+  --color-accent-hover: #1e3a8a;    /* acento al pasar el cursor */
+  --color-on-accent: #ffffff;       /* texto sobre fondos de acento */
+
+  /* Tipografía: --font-inter la define Astro; sans-serif es el respaldo */
+  --font-sans: var(--font-inter), sans-serif;
+
+  /* Forma y espacio */
+  --radius-sm: 10px;        /* botones */
+  --radius-md: 16px;        /* tarjetas */
+  --radius-pill: 999px;     /* etiquetas redondeadas */
+  --container-max: 1280px;  /* ancho máximo del contenido */
+}
+
+/* Todos los elementos. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* body: base visual de toda la página. */
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.5;     /* interlineado cómodo para leer */
+  -webkit-font-smoothing: antialiased; /* texto más nítido en macOS */
+}
+
+/* Imágenes y SVG. */
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* a: enlaces con color de acento y sin subrayado por defecto. */
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+/* a:hover: el enlace se oscurece al pasar el cursor. */
+a:hover {
+  color: var(--color-accent-hover);
+}
+
+/* :focus-visible: anillo de foco solo al navegar con teclado (Tab). */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Accesibilidad: sin animaciones para quien pidió reducir el movimiento. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
