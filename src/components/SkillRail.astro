@@ -1,0 +1,101 @@
+---
+// src/components/SkillRail.astro
+/**
+ * Carrusel vertical decorativo de iconos de herramientas.
+ * Los iconos bajan en bucle continuo. Es decorativo (aria-hidden): las mismas
+ * habilidades aparecen como texto en la sección "Habilidades".
+ * Props:
+ *  - reverse: invierte el orden de los iconos (para que dos carriles no vayan sincronizados).
+ *  - duration: segundos por ciclo (más alto = más lento).
+ * Variables CSS opcionales: --rail-width y --rail-height (por defecto 80px y 800px).
+ */
+ 
+import { tools } from '../data/tools';
+
+interface Props {
+  reverse?: boolean;
+  duration?: number;
+}
+
+const { reverse = false, duration = 34 } = Astro.props;
+
+// Orden de los iconos según el carril
+const ordered = reverse ? [...tools].reverse() : tools;
+
+// Se repite la lista 3 veces: la animación desplaza exactamente 1/3 de la
+// columna (una copia) y reinicia, sin que se note el salto. Con 2 copias no
+// alcanzaría a cubrir la altura visible del carril.
+const COPIES = 3;
+const items = Array.from({ length: COPIES }, () => ordered).flat();
+---
+
+<div class="rail" aria-hidden="true" style={`--duration: ${duration}s`}>
+  <ul class="rail__track">
+    {
+      items.map((tool) => (
+        <li class:list={['rail__item', { 'rail__item--wide': tool.wide }]}>
+          {/* alt vacío: imagen decorativa, los lectores de pantalla la ignoran */}
+          <img src={tool.icon} alt="" decoding="async" />
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  /* Ventana visible: recorta lo que sale de la altura del carril */
+  .rail {
+    width: var(--rail-width, 80px);
+    height: var(--rail-height, 800px);
+    overflow: hidden;
+    /* Desvanece los iconos al entrar y salir por arriba y por abajo */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  }
+
+  /* Columna con las tres copias; es lo que se desliza */
+  .rail__track {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    animation: rail-down var(--duration) linear infinite;
+    will-change: transform;
+  }
+
+  /* margin-bottom (no gap): cada copia mide lo mismo y el bucle encaja al píxel */
+  .rail__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .rail__item img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain; /* respeta la proporción de cada logo */
+  }
+
+  /* Logos apaisados con texto (p. ej. MLflow) */
+  .rail__item--wide img {
+    width: 64px;
+    height: 24px;
+  }
+
+  /* De -1/3 a 0: avanza una copia completa hacia abajo y reinicia */
+  @keyframes rail-down {
+    from {
+      transform: translateY(calc(-100% / 3));
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  /* En pantallas angostas se oculta: es decorativo y el contenido necesita el ancho */
+  @media (max-width: 900px) {
+    .rail {
+      display: none;
+    }
+  }
+</style>

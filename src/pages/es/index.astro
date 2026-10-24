@@ -9,6 +9,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import LinkButton from '../../components/LinkButton.astro';
 import SkillGroup from '../../components/SkillGroup.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import SkillRail from '../../components/SkillRail.astro';
 import { skillGroups } from '../../data/skills';
 import { useTranslations } from '../../i18n/utils';
 
@@ -17,30 +18,29 @@ const t = useTranslations(lang);
 ---
 
 <BaseLayout lang={lang} title={`${t('home.title')} | ${t('meta.siteName')}`}>
-  <h1>{t('home.title')} (banco de pruebas)</h1>
+  <div class="stage">
+    <SkillRail />
 
-  <p>
-    <LinkButton href="#" download>{t('cv.es')}</LinkButton>
-    <LinkButton href="#" variant="secondary" download>{t('cv.en')}</LinkButton>
-  </p>
+    <div class="stage__content">
+      <!-- Aquí va el contenido de prueba que ya tenías: h1, botones, habilidades y tarjetas -->
+    </div>
 
-  <h2>{t('skills.title')}</h2>
-  {skillGroups.map((g) => <SkillGroup lang={lang} titleKey={g.titleKey} items={g.items} />)}
-
-  <h2>{t('nav.projects')}</h2>
-  <ProjectCard
-    title="E-commerce"
-    description="Texto de prueba de la tarjeta."
-    href="#"
-    linkLabel={t('projects.view')}
-    placeholder="[Captura]"
-  />
-  <ProjectCard
-    title="service-hub"
-    description="Texto de prueba de la tarjeta."
-    href="#"
-    linkLabel={t('projects.view')}
-    placeholder="[Captura]"
-    status={t('projects.inDev')}
-  />
+    <SkillRail reverse duration={42} />
+  </div>
 </BaseLayout>
+
+<style>
+  /* Carriles a los lados y contenido central con el ancho restante */
+  .stage {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 28px 8px;
+  }
+  .stage__content {
+    flex: 1 1 0;
+    min-width: 0; /* permite que el contenido se encoja en lugar de desbordar */
+    max-width: var(--container-max);
+  }
+</style>
