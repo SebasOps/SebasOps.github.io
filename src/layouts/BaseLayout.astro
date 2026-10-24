@@ -56,7 +56,7 @@ const {
   </head>
   <body>
     {/* Estructura: [carril] [columna central] [carril]. Sin rails, solo la columna. */}
-    <div class="shell">
+    <div class:list={['shell', { 'shell--rails': rails }]}>
       {
         rails && (
           <div class="shell__rail">
@@ -86,19 +86,42 @@ const {
 </html>
 
 <style>
+  /* Variables del contenedor: las lee también SkillRail (--rail-width) */
   .shell {
+    --rail-width: 80px; /* ancho de cada carril */
+    --rail-gap: 24px; /* margen mínimo entre un carril y el contenido */
+    --shell-edge: clamp(12px, 1.5vw, 24px); /* distancia de los carriles al borde de la ventana */
+
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 12px;
-    padding: 28px clamp(12px, 2vw, 24px);
+    padding: 28px var(--shell-edge);
   }
 
-  /* min-width: 0 permite que la columna se encoja en lugar de desbordar */
+  /* Sin carriles: una sola columna centrada con ancho máximo.
+     min-width: 0 permite que se encoja en lugar de desbordar. */
   .shell__col {
     flex: 1 1 0;
     min-width: 0;
     max-width: var(--container-max);
+  }
+
+  /* Con carriles: space-between los lleva a los bordes de la ventana y deja
+     la columna al centro. El contenido ocupa el 50% del espacio sobrante entre
+     carriles (el otro 50% queda como margen a cada lado):
+       ancho = (contenedor_max + disponible) / 2
+       disponible = ancho total - los dos carriles
+     El tope (min) conserva siempre al menos --rail-gap junto a cada carril. */
+  .shell--rails {
+    justify-content: space-between;
+  }
+  .shell--rails .shell__col {
+    flex: 0 1 auto;
+    max-width: none;
+    width: min(
+      calc(100% - 2 * var(--rail-width) - 2 * var(--rail-gap)),
+      calc((var(--container-max) + 100% - 2 * var(--rail-width)) / 2)
+    );
   }
 
   /* sticky: los carriles se quedan a la vista al hacer scroll.
@@ -110,10 +133,18 @@ const {
     --rail-height: min(800px, calc(100vh - 56px));
   }
 
-  /* El carril es decorativo: en pantallas angostas el contenido necesita el ancho */
+  /* Pantallas angostas: se ocultan los carriles (son decorativos) y la columna
+     vuelve a ocupar todo el ancho. */
   @media (max-width: 900px) {
     .shell__rail {
       display: none;
+    }
+    .shell--rails {
+      justify-content: center;
+    }
+    .shell--rails .shell__col {
+      flex: 1 1 0;
+      width: auto;
     }
   }
 </style>
