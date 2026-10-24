@@ -1,0 +1,80 @@
+---
+// src/components/SeoHead.astro
+/**
+ * Metadatos SEO del <head>: descripción, URL canónica, alternativas de idioma
+ * (hreflang), Open Graph y robots. Se incluye desde BaseLayout.
+ * Props:
+ *  - lang: idioma de la página.
+ *  - title: título de la página (también para Open Graph).
+ *  - description: descripción única de la página (unos 120-160 caracteres).
+ *  - image: ruta pública de la imagen para compartir en redes (opcional).
+ *  - noindex: true pide a los buscadores no indexar la página (p. ej. la 404).
+ */
+
+import { languages, defaultLang } from '../i18n/ui';
+import { useTranslations, switchLangPath, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  image?: string;
+  noindex?: boolean;
+}
+
+const { lang, title, description, image, noindex = false } = Astro.props;
+const t = useTranslations(lang);
+
+// Formato de locale que espera Open Graph (idioma_TERRITORIO)
+const ogLocales: Record<Lang, string> = { es: 'es_LA', en: 'en_US' };
+
+// Ruta normalizada con barra final, igual que en Navigation.astro
+const pathname = Astro.url.pathname.replace(/\/?$/, '/');
+
+// URL canónica: absoluta, construida con `site` de astro.config.mjs
+const canonical = new URL(pathname, Astro.site).href;
+
+// La misma página en cada idioma, para las etiquetas hreflang
+const alternates = (Object.keys(languages) as Lang[]).map((code) => ({
+  code,
+  href: new URL(switchLangPath(pathname, code), Astro.site).href,
+}));
+
+// x-default: la versión para visitantes cuyo idioma no coincide con ninguno
+const xDefault = alternates.find(({ code }) => code === defaultLang)?.href ?? canonical;
+
+// Imagen para redes: debe ser una URL absoluta (las redes no resuelven rutas relativas)
+const ogImage = image ? new URL(image, Astro.site).href : undefined;
+
+// Locales de los demás idiomas, para og:locale:alternate
+const otherLocales = (Object.keys(ogLocales) as Lang[])
+  .filter((code) => code !== lang)
+  .map((code) => ogLocales[code]);
+---
+
+<meta name="description" content={description} />
+
+{/* Páginas noindex (404): solo se pide no indexar, sin canonical ni redes */}
+{noindex && <meta name="robots" content="noindex" />}
+
+{
+  !noindex && (
+    <Fragment>
+      <link rel="canonical" href={canonical} />
+
+      {/* Alternativas de idioma + versión por defecto */}
+      {alternates.map(({ code, href }) => <link rel="alternate" hreflang={code} href={href} />)}
+      <link rel="alternate" hreflang="x-default" href={xDefault} />
+
+      {/* Open Graph: vista previa al compartir en LinkedIn, WhatsApp, etc. */}
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content={t('meta.siteName')} />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={canonical} />
+      <meta property="og:locale" content={ogLocales[lang]} />
+      {otherLocales.map((locale) => <meta property="og:locale:alternate" content={locale} />)}
+      {ogImage && <meta property="og:image" content={ogImage} />}
+    </Fragment>
+  )
+}

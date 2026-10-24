@@ -1,0 +1,25 @@
+---
+// src/pages/404.astro
+/**
+ * Página 404. GitHub Pages sirve /404.html cuando la ruta no existe.
+ * Es bilingüe porque en un sitio estático no se puede saber el idioma del visitante.
+ * Sin navegación del sitio y con noindex.
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { localizedPath } from '../i18n/utils';
+---
+
+<BaseLayout
+  lang="es"
+  title="404 | Sebastián Aguilar"
+  description="Página no encontrada / Page not found"
+  showNav={false}
+  noindex
+>
+  <h1>Página no encontrada</h1>
+  <p><a href={localizedPath('es')}>Volver al inicio</a></p>
+
+  {/* lang="en" marca este bloque como inglés para lectores de pantalla */}
+  <p lang="en">Page not found. <a href={localizedPath('en')}>Back to home</a></p>
+</BaseLayout>

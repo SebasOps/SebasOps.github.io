@@ -21,6 +21,9 @@ export const ui = {
   es: {
     // Metadatos
     'meta.siteName': 'Sebastián Aguilar',
+    'meta.description.home': 'Portafolio de Sebastián Aguilar, estudiante de Ciencia de Datos y desarrollador web full stack.',
+    'meta.description.projects': 'Proyectos de Sebastián Aguilar: plataformas web de comercio electrónico y reservas en línea.',
+    'meta.description.about': 'Sobre Sebastián Aguilar: formación, habilidades y experiencia en ciencia de datos y desarrollo web.',
 
     // Navegación
     'nav.label': 'Navegación principal',
@@ -51,6 +54,9 @@ export const ui = {
   en: {
     // Metadata
     'meta.siteName': 'Sebastián Aguilar',
+    'meta.description.home': 'Portfolio of Sebastián Aguilar, Data Science student and full stack web developer.',
+    'meta.description.projects': 'Projects by Sebastián Aguilar: e-commerce and online booking web platforms.',
+    'meta.description.about': 'About Sebastián Aguilar: education, skills and experience in data science and web development.',
 
     // Navigation
     'nav.label': 'Main navigation',

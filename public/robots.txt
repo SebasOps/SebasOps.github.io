@@ -1,0 +1,6 @@
+# public/robots.txt
+# Permite el rastreo de todo el sitio e indica dónde está el sitemap.
+User-agent: *
+Allow: /
+
+Sitemap: https://sebasops.github.io/sitemap-index.xml

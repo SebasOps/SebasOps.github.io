@@ -5,21 +5,28 @@
  * Props:
  *  - lang: idioma de la página ('es' | 'en'), se usa en <html lang>.
  *  - title: título de la pestaña (y base del SEO).
- *  - description: meta descripción (opcional).
+ *  - description: meta descripción única de la página.
+ *  - image: imagen para compartir en redes (opcional).
+ *  - noindex: true evita la indexación (p. ej. la página 404).
+ *  - showNav: false oculta la navegación (p. ej. la página 404).
  */
 
 import { Font } from 'astro:assets';
 import '../styles/global.css'; // Astro empaqueta y enlaza el CSS global
 import Navigation from '../components/Navigation.astro';
+import SeoHead from '../components/SeoHead.astro';
 import type { Lang } from '../i18n/utils';
 
 interface Props {
   lang: Lang;
   title: string;
-  description?: string;
+  description: string;
+  image?: string;
+  noindex?: boolean;
+  showNav?: boolean;
 }
 
-const { lang, title, description } = Astro.props;
+const { lang, title, description, image, noindex = false, showNav = true } = Astro.props;
 ---
 
 <!doctype html>
@@ -30,11 +37,14 @@ const { lang, title, description } = Astro.props;
     {/* Registra la fuente configurada en astro.config.mjs (variable --font-inter) */}
     <Font cssVariable="--font-inter" />
     <title>{title}</title>
-    {/* La descripción es opcional: solo se emite la etiqueta si existe */}
-    {description && <meta name="description" content={description} />}
+    {/* Descripción, canonical, hreflang y Open Graph */}
+    <SeoHead lang={lang} title={title} description={description} image={image} noindex={noindex} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {/* Ayuda a los buscadores a encontrar el sitemap generado en el build */}
+    <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
   <body>
-    <Navigation lang={lang} />
+    {showNav && <Navigation lang={lang} />}
     {/* <main> marca la zona principal para lectores de pantalla y buscadores */}
     <main>
       <slot />
