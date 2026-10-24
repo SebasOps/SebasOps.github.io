@@ -6,7 +6,7 @@
  *  - lang: idioma de la página actual.
  * Marca con aria-current el enlace de la página y el idioma activos.
  */
- 
+
 import { languages } from '../i18n/ui';
 import {
   useTranslations,
@@ -21,8 +21,12 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+
+// Ruta actual normalizada con barra final: así "/es/about" y "/es/about/"
+// se comparan igual contra los enlaces de abajo.
 const currentPath = Astro.url.pathname.replace(/\/?$/, '/');
 
+// Enlaces principales; slug '' corresponde al inicio del idioma.
 const links = [
   { key: 'nav.home', slug: '' },
   { key: 'nav.projects', slug: 'projects' },
@@ -38,6 +42,7 @@ const links = [
           const href = localizedPath(lang, slug);
           return (
             <li>
+              {/* aria-current="page" indica a lectores de pantalla la página activa */}
               <a href={href} aria-current={currentPath === href ? 'page' : undefined}>
                 {t(key)}
               </a>
@@ -48,10 +53,12 @@ const links = [
     </ul>
   </nav>
 
+  {/* Selector de idioma: enlaces a la misma página en el otro idioma */}
   <ul aria-label={t('lang.label')}>
     {
       Object.keys(languages).map((code) => (
         <li>
+          {/* lang/hreflang declaran el idioma del enlace (accesibilidad y SEO) */}
           <a
             href={switchLangPath(currentPath, code as Lang)}
             lang={code}

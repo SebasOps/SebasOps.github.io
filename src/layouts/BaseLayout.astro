@@ -8,10 +8,10 @@
  *  - description: meta descripción (opcional).
  */
 
-import type { Lang } from '../i18n/utils';
-import Navigation from '../components/Navigation.astro';
 import { Font } from 'astro:assets';
-import '../styles/global.css';
+import '../styles/global.css'; // Astro empaqueta y enlaza el CSS global
+import Navigation from '../components/Navigation.astro';
+import type { Lang } from '../i18n/utils';
 
 interface Props {
   lang: Lang;
@@ -27,12 +27,15 @@ const { lang, title, description } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Registra la fuente configurada en astro.config.mjs (variable --font-inter) */}
     <Font cssVariable="--font-inter" />
     <title>{title}</title>
+    {/* La descripción es opcional: solo se emite la etiqueta si existe */}
     {description && <meta name="description" content={description} />}
   </head>
   <body>
     <Navigation lang={lang} />
+    {/* <main> marca la zona principal para lectores de pantalla y buscadores */}
     <main>
       <slot />
     </main>
