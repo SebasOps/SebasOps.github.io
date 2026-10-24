@@ -2,16 +2,15 @@
 // src/pages/es/index.astro
 /**
  * Página de inicio en español (/es/).
- * Marcador de posición: más adelante usará el layout base y los componentes.
+ * Usa el layout base y los textos del diccionario i18n.
  */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const lang = 'es';
+const t = useTranslations(lang);
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <title>Inicio</title>
-  </head>
-  <body>
-    <h1>Inicio (ES)</h1>
-  </body>
-</html>
+<BaseLayout lang={lang} title={`${t('home.title')} | ${t('meta.siteName')}`}>
+  <h1>{t('home.title')} (ES)</h1>
+</BaseLayout>

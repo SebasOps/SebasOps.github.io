@@ -1,0 +1,32 @@
+---
+// src/layouts/BaseLayout.astro
+/**
+ * Layout base de todas las páginas: <html>, <head> (metadatos) y <body>.
+ * Props:
+ *  - lang: idioma de la página ('es' | 'en'), se usa en <html lang>.
+ *  - title: título de la pestaña (y base del SEO).
+ *  - description: meta descripción (opcional).
+ */
+import type { Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description?: string;
+}
+
+const { lang, title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
