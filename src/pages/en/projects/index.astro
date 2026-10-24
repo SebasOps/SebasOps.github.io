@@ -1,0 +1,17 @@
+---
+// src/pages/en/projects/index.astro
+/**
+ * Projects page in English (/en/projects/).
+ * Placeholder: it will list the project cards later.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../../i18n/utils';
+
+const lang = 'en';
+const t = useTranslations(lang);
+---
+
+<BaseLayout lang={lang} title={`${t('nav.projects')} | ${t('meta.siteName')}`}>
+  <h1>{t('nav.projects')}</h1>
+</BaseLayout>

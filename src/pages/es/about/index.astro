@@ -1,0 +1,17 @@
+---
+// src/pages/es/about/index.astro
+/**
+ * Página "Sobre mí" en español (/es/about/).
+ * Marcador de posición: luego tendrá tu texto, habilidades y certificaciones.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../../i18n/utils';
+
+const lang = 'es';
+const t = useTranslations(lang);
+---
+
+<BaseLayout lang={lang} title={`${t('nav.about')} | ${t('meta.siteName')}`}>
+  <h1>{t('nav.about')}</h1>
+</BaseLayout>

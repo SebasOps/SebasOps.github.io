@@ -1,0 +1,17 @@
+---
+// src/pages/es/projects/index.astro
+/**
+ * Página de proyectos en español (/es/projects/).
+ * Marcador de posición: luego listará las tarjetas de proyectos.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../../i18n/utils';
+
+const lang = 'es';
+const t = useTranslations(lang);
+---
+
+<BaseLayout lang={lang} title={`${t('nav.projects')} | ${t('meta.siteName')}`}>
+  <h1>{t('nav.projects')}</h1>
+</BaseLayout>
