@@ -18,11 +18,13 @@ export default defineConfig({
   site: SITE,
 
   i18n: {
-    locales: ['es', 'en'],  // los nombres deben coincidir con las carpetas de src/pages
-    defaultLocale: 'es',    // idioma al que redirige la raíz "/"
+    locales: ['es', 'en'], // los nombres deben coincidir con las carpetas de src/pages
+    defaultLocale: 'es', // idioma al que se envía la raíz "/"
     routing: {
-      // Ambos idiomas llevan prefijo (/es/, /en/); además activa el redirect automático de "/" hacia /es/.
+      // Ambos idiomas llevan prefijo en la URL (/es/, /en/)
       prefixDefaultLocale: true,
+      // La raíz "/" no se redirige por defecto; con esta opción se envía a /es/
+      redirectToDefaultLocale: true,
     },
   },
 

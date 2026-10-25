@@ -1,21 +1,20 @@
 ---
 // src/pages/index.astro
 /**
- * Raíz del sitio (/). Astro la redirige a /es/ según la configuración i18n
- * de astro.config.mjs. El archivo es obligatorio aunque no tenga contenido.
+ * Raíz del sitio (/). Astro la redirige a /es/ (ver `redirectToDefaultLocale`
+ * en astro.config.mjs). El archivo es obligatorio con prefixDefaultLocale: true.
+ * El contenido es solo un respaldo por si la redirección no se aplica.
  */
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Sebastián Aguilar</title>
+  </head>
+  <body>
+    <p><a href="/es/">Español</a> · <a href="/en/">English</a></p>
+  </body>
 </html>
