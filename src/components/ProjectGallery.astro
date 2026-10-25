@@ -47,6 +47,7 @@ const slides = images.map((image) => ({
             widths={[640, 960, 1440]}
             sizes="(max-width: 960px) 100vw, 960px"
             loading={index === 0 ? 'eager' : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : undefined}
           />
           <figcaption>{slide.caption}</figcaption>
         </figure>

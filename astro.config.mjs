@@ -17,6 +17,12 @@ export default defineConfig({
   // <usuario>.github.io, así que el sitio se sirve desde la raíz.
   site: SITE,
 
+  build: {
+    // Incrusta el CSS en cada página: elimina la petición de la hoja de estilos,
+    // que bloquea el primer render. El CSS del sitio es pequeño.
+    inlineStylesheets: 'always',
+  },
+
   i18n: {
     locales: ['es', 'en'], // los nombres deben coincidir con las carpetas de src/pages
     defaultLocale: 'es', // idioma al que se envía la raíz "/"

@@ -46,7 +46,7 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {/* Registra la fuente configurada en astro.config.mjs (variable --font-inter) */}
-    <Font cssVariable="--font-inter" />
+    <Font cssVariable="--font-inter" preload />
     <title>{title}</title>
     {/* Descripción, canonical, hreflang y Open Graph */}
     <SeoHead lang={lang} title={title} description={description} image={image} noindex={noindex} />
