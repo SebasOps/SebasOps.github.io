@@ -12,6 +12,8 @@
 
 Portafolio personal orientado a ciencia de datos, con el desarrollo web como segundo foco. Es un sitio estático y bilingüe (español e inglés) construido con Astro.
 
+![Vista previa del portafolio](public/og-image.png)
+
 ## Qué incluye
 
 - **Inicio**, **Proyectos** (listado y página de detalle de cada uno) y **Sobre mí** (trayectoria, formación, certificaciones y contacto), más una página 404.

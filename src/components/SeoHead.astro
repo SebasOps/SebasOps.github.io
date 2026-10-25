@@ -7,12 +7,13 @@
  *  - lang: idioma de la página.
  *  - title: título de la página (también para Open Graph).
  *  - description: descripción única de la página (unos 120-160 caracteres).
- *  - image: ruta pública de la imagen para compartir en redes (opcional).
+ *  - image: ruta pública de otra imagen para compartir (opcional; por defecto, la de src/data/seo.ts).
  *  - noindex: true pide a los buscadores no indexar la página (p. ej. la 404).
  */
 
 import { languages, defaultLang } from '../i18n/ui';
 import { useTranslations, switchLangPath, type Lang } from '../i18n/utils';
+import { ogImage } from '../data/seo';
 
 interface Props {
   lang: Lang;
@@ -43,8 +44,11 @@ const alternates = (Object.keys(languages) as Lang[]).map((code) => ({
 // x-default: la versión para visitantes cuyo idioma no coincide con ninguno
 const xDefault = alternates.find(({ code }) => code === defaultLang)?.href ?? canonical;
 
-// Imagen para redes: debe ser una URL absoluta (las redes no resuelven rutas relativas)
-const ogImage = image ? new URL(image, Astro.site).href : undefined;
+// Imagen para redes: la común del sitio salvo que la página indique otra.
+// Debe ser una URL absoluta (las redes no resuelven rutas relativas).
+const imagePath = image ?? ogImage.path;
+const ogImageUrl = new URL(imagePath, Astro.site).href;
+const isDefaultImage = imagePath === ogImage.path;
 
 // Locales de los demás idiomas, para og:locale:alternate
 const otherLocales = (Object.keys(ogLocales) as Lang[])
@@ -73,8 +77,20 @@ const otherLocales = (Object.keys(ogLocales) as Lang[])
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonical} />
       <meta property="og:locale" content={ogLocales[lang]} />
-      {otherLocales.map((locale) => <meta property="og:locale:alternate" content={locale} />)}
-      {ogImage && <meta property="og:image" content={ogImage} />}
+      {otherLocales.map((locale) => <meta property="og:locale:alternate" content={locale} />)}      
+      <meta property="og:image" content={ogImageUrl} />
+      {/* Tamaño y descripción: solo se conocen para la imagen por defecto */}
+      {
+        isDefaultImage && (
+          <Fragment>
+            <meta property="og:image:width" content={String(ogImage.width)} />
+            <meta property="og:image:height" content={String(ogImage.height)} />
+            <meta property="og:image:alt" content={ogImage.alt} />
+          </Fragment>
+        )
+      }
+      {/* Tarjeta grande en X/Twitter; el resto de los datos los toma de Open Graph */}
+      <meta name="twitter:card" content="summary_large_image" />
     </Fragment>
   )
 }

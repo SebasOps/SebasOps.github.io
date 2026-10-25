@@ -4,13 +4,24 @@
  * Raíz del sitio (/): elige el idioma según el navegador y redirige a /es/ o /en/.
  * - Con JavaScript: toma el primer idioma preferido del navegador que el sitio soporta.
  * - Sin JavaScript: <meta refresh> dentro de <noscript> hacia el idioma por defecto.
+ * - Lleva etiquetas Open Graph: los rastreadores de redes no ejecutan JavaScript,
+ *   así que leen estas etiquetas en lugar de seguir la redirección.
  * - Página noindex y fuera del sitemap: solo sirve de puerta de entrada.
  * Requiere `redirectToDefaultLocale: false` en astro.config.mjs.
  */
  
 import { languages, defaultLang } from '../i18n/ui';
+import { ogImage } from '../data/seo';
 
 const locales = Object.keys(languages); // ['es', 'en']
+
+// URLs absolutas para Open Graph (Astro.site viene de astro.config.mjs)
+const homeUrl = new URL('/', Astro.site).href;
+const imageUrl = new URL(ogImage.path, Astro.site).href;
+
+// La imagen está en inglés, así que la vista previa también
+const title = 'Sebastián Aguilar | Portfolio';
+const description = 'Portfolio of Sebastián Aguilar, Data Science student and full stack web developer.';
 ---
 
 <html lang={defaultLang}>
@@ -18,7 +29,20 @@ const locales = Object.keys(languages); // ['es', 'en']
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>Sebastián Aguilar</title>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {/* Vista previa al compartir la raíz (LinkedIn, WhatsApp, etc.) */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sebastián Aguilar" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={homeUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content={String(ogImage.width)} />
+    <meta property="og:image:height" content={String(ogImage.height)} />
+    <meta property="og:image:alt" content={ogImage.alt} />
+    <meta name="twitter:card" content="summary_large_image" />
 
     {/* Respaldo sin JavaScript; dentro de <noscript> para no competir con el script */}
     <noscript><meta http-equiv="refresh" content={`0;url=/${defaultLang}/`} /></noscript>
