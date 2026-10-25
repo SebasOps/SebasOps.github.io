@@ -29,8 +29,9 @@ export default defineConfig({
     routing: {
       // Ambos idiomas llevan prefijo en la URL (/es/, /en/)
       prefixDefaultLocale: true,
-      // La raíz "/" no se redirige por defecto; con esta opción se envía a /es/
-      redirectToDefaultLocale: true,
+      // false: la raíz "/" la maneja src/pages/index.astro, que elige el idioma
+      // según el navegador (con true, Astro la reemplazaría por un redirect fijo a /es/)
+      redirectToDefaultLocale: false,
     },
   },
 
